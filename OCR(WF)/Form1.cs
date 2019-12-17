@@ -50,15 +50,20 @@ namespace OCR_WF_
             {
                 IplImage source = new IplImage();
                 Bitmap src = new Bitmap(@"C:\Users\Solzreed\source\repos\OCR(WF)\OCR(WF)\src.jpg");
-                source = Convert.Binary(src.ToIplImage());
+                Bitmap src2 = Convert.Crop(src);
+                source = Convert.Binary(src2.ToIplImage());
                 pictureBoxIpl1.ImageIpl = source;
                 Bitmap savesrc = new Bitmap(source.ToBitmap());
                 savesrc.Save(@"C:\wtf\aa.jpg");
 
+                var service = new TesseractService(@"C:\Program Files\Tesseract-OCR", "kor", @"C:\Program Files\Tesseract-OCR\tessdata");
+                var stream = File.OpenRead(@"C:\wtf\aa.jpg");
+                var text = service.GetText(stream);
+                MessageBox.Show(text);
                 //var ocr = new TesseractEngine("./tessdata", "kor", EngineMode.TesseractOnly);
                 //var texts = ocr.Process(source.ToBitmap());
                 //MessageBox.Show(texts.GetText());
-                Ocrun();
+                //Ocrun();
 
             }
 
