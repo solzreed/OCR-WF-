@@ -8,15 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Tesseract;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
-using Windows.Globalization;
-using Windows.Graphics.Imaging;
-using Windows.Media.Ocr;
-using Windows.Storage;
-using Windows.Storage.Streams;
 using System.IO;
+using System.Threading;
 
 
 
@@ -30,40 +25,27 @@ namespace OCR_WF_
             InitializeComponent();
             
         }
-        private async void Ocrun()
-        {
-            var language = new Language("ko");
-            if (!OcrEngine.IsLanguageSupported(language))
-            {
-                throw new Exception($"{ language.LanguageTag } is not supported in this system.");
-            }
-            var stream = File.OpenRead(@"C:\wtf\aa.jpg");
-            var decoder = await BitmapDecoder.CreateAsync(stream.AsRandomAccessStream());
-            var bitmap = await decoder.GetSoftwareBitmapAsync();
-            var engine = OcrEngine.TryCreateFromLanguage(language);
-            var ocrResult = await engine.RecognizeAsync(bitmap).AsTask();
-            MessageBox.Show(ocrResult.Text);
-        }
         private void button1_Click(object sender, EventArgs e)
         {
             using (OpenCV Convert = new OpenCV())
             {
+                //이미지 전처리 작업
                 IplImage source = new IplImage();
-                Bitmap src = new Bitmap(@"C:\Users\Solzreed\source\repos\OCR(WF)\OCR(WF)\src.jpg");
+                string path = Thread.GetDomain().BaseDirectory + "src.jpg";
+                Bitmap src = new Bitmap(@path);
                 Bitmap src2 = Convert.Crop(src);
                 source = Convert.Binary(src2.ToIplImage());
                 pictureBoxIpl1.ImageIpl = source;
                 Bitmap savesrc = new Bitmap(source.ToBitmap());
-                savesrc.Save(@"C:\wtf\aa.jpg");
-
-                var service = new TesseractService(@"C:\Program Files\Tesseract-OCR", "kor", @"C:\Program Files\Tesseract-OCR\tessdata");
-                var stream = File.OpenRead(@"C:\wtf\aa.jpg");
+                string temppath = Thread.GetDomain().BaseDirectory + "temp.jpg";
+                savesrc.Save(temppath);
+                //여기까지 이미지 전처리
+                //테서렉트5.0 가동
+                string program = Thread.GetDomain().BaseDirectory + "Tesseract-OCR";
+                var service = new TesseractService(program, "kor", program+ @"\tessdata");
+                var stream = File.OpenRead(temppath);
                 var text = service.GetText(stream);
                 MessageBox.Show(text);
-                //var ocr = new TesseractEngine("./tessdata", "kor", EngineMode.TesseractOnly);
-                //var texts = ocr.Process(source.ToBitmap());
-                //MessageBox.Show(texts.GetText());
-                //Ocrun();
 
             }
 
