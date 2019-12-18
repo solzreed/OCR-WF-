@@ -30,6 +30,7 @@ namespace OCR_WF_
                 dataDir = Path.Combine(tesseractDir, "tessdata");
 
             Environment.SetEnvironmentVariable("TESSDATA_PREFIX", dataDir);
+           
         }
 
         /// <summary>

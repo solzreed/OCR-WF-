@@ -42,9 +42,10 @@ namespace OCR_WF_
                 //여기까지 이미지 전처리
                 //테서렉트5.0 가동
                 string program = Thread.GetDomain().BaseDirectory + "Tesseract-OCR";
+                
                 var service = new TesseractService(program, "kor", program+ @"\tessdata");
                 var stream = File.OpenRead(temppath);
-                var text = service.GetText(stream);
+                string text = textedit.Edit(service.GetText(stream));
                 MessageBox.Show(text);
 
             }
