@@ -11,7 +11,9 @@ using System.Windows.Forms;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using System.IO;
+using System.Drawing.Imaging;
 using System.Threading;
+using System.Diagnostics;
 
 
 
@@ -25,32 +27,39 @@ namespace OCR_WF_
             InitializeComponent();
             
         }
-        private void button1_Click(object sender, EventArgs e)
+
+        private void Run(screenshot c,TesseractService service, OpenCV Convert)
         {
-            using (OpenCV Convert = new OpenCV())
-            {
                 //이미지 전처리 작업
                 IplImage source = new IplImage();
-                string path = Thread.GetDomain().BaseDirectory + "src.jpg";
-                Bitmap src = new Bitmap(@path);
-                Bitmap src2 = Convert.Crop(src);
-                source = Convert.Binary(src2.ToIplImage());
+                 string path = Thread.GetDomain().BaseDirectory + "src.jpg";
+                Bitmap src = new Bitmap(c.Capture());
+                source = Convert.Binary(Convert.Crop(src).ToIplImage());
                 pictureBoxIpl1.ImageIpl = source;
                 Bitmap savesrc = new Bitmap(source.ToBitmap());
                 string temppath = Thread.GetDomain().BaseDirectory + "temp.jpg";
                 savesrc.Save(temppath);
                 //여기까지 이미지 전처리
+
+
                 //테서렉트5.0 가동
-                string program = Thread.GetDomain().BaseDirectory + "Tesseract-OCR";
-                
-                var service = new TesseractService(program, "kor", program+ @"\tessdata");
                 var stream = File.OpenRead(temppath);
                 string text = textedit.Edit(service.GetText(stream));
                 MessageBox.Show(text);
-
-            }
-
-
+            
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string program = Thread.GetDomain().BaseDirectory + "Tesseract-OCR";
+            OpenCV Convert = new OpenCV();
+            screenshot c = new screenshot();
+            var service = new TesseractService(program, "kor", program + @"\tessdata");
+            while (true)
+             {
+                 Run(c, service,Convert);
+                 Thread.Sleep(10000);
+             }
+            
         }
 
     }

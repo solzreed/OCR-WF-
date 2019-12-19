@@ -79,6 +79,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="screenshot.cs" />
     <Compile Include="TesseractService.cs" />
     <Compile Include="textedit.cs" />
     <EmbeddedResource Include="Form1.resx">
