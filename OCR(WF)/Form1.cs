@@ -28,12 +28,11 @@ namespace OCR_WF_
             
         }
 
-        private void Run(screenshot c,TesseractService service, OpenCV Convert)
+       private void Run(adb a,TesseractService service, OpenCV Convert)
         {
                 //이미지 전처리 작업
                 IplImage source = new IplImage();
-                 string path = Thread.GetDomain().BaseDirectory + "src.jpg";
-                Bitmap src = new Bitmap(c.Capture());
+                Bitmap src = new Bitmap(a.screenshot());
                 source = Convert.Binary(Convert.Crop(src).ToIplImage());
                 pictureBoxIpl1.ImageIpl = source;
                 Bitmap savesrc = new Bitmap(source.ToBitmap());
@@ -48,15 +47,18 @@ namespace OCR_WF_
                 MessageBox.Show(text);
             
         }
+        
+
         private void button1_Click(object sender, EventArgs e)
         {
             string program = Thread.GetDomain().BaseDirectory + "Tesseract-OCR";
             OpenCV Convert = new OpenCV();
-            screenshot c = new screenshot();
+            adb a = new adb();
             var service = new TesseractService(program, "kor", program + @"\tessdata");
+
             while (true)
              {
-                 Run(c, service,Convert);
+                 Run(a, service,Convert);
                  Thread.Sleep(10000);
              }
             

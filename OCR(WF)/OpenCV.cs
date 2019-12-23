@@ -26,7 +26,7 @@ namespace OCR_WF_
         public Bitmap Crop(Bitmap src)
         {
             Mat source = OpenCvSharp.Extensions.BitmapConverter.ToMat(src);
-            Mat dst = source.SubMat(new Rect(866, 203, 156, 356));
+            Mat dst = source.SubMat(new Rect(1857, 350, 434, 756));
             return OpenCvSharp.Extensions.BitmapConverter.ToBitmap(dst);
         }
 
@@ -34,7 +34,7 @@ namespace OCR_WF_
         {
             bin = new IplImage(src.Size, BitDepth.U8, 1);
             Cv.CvtColor(src, bin, ColorConversion.RgbToGray);
-            Cv.Threshold(bin, bin, 100, 255, ThresholdType.ToZero);
+            Cv.Threshold(bin, bin, 70, 255, ThresholdType.ToZero);
             return bin;
         }
 
